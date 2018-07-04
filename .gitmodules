@@ -1,0 +1,3 @@
+[submodule "RazorVisualizer/Razor"]
+	path = RazorVisualizer/Razor
+	url = git@github.com:ajaybhargavb/Razor

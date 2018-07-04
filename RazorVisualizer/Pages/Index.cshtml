@@ -1,0 +1,25 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "RazorVisualizer";
+}
+
+<br />
+<div class="container">
+    <div class="row">
+        <div class="source-container col-md-6">
+            <textarea id="source"></textarea>
+        </div>
+        <div class="output-container col-md-5">
+            <div class="tree-container row">
+                <div id="results">
+                    Parsed tree output
+                </div>
+            </div>
+            <div class="highlight-container row">
+                Highlight
+            </div>
+        </div>
+    </div>
+    <br />
+</div>

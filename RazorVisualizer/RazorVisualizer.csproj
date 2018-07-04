@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Razor/**/*</DefaultItemExcludes>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="./Razor/src/Microsoft.AspNetCore.Razor.Language/Microsoft.AspNetCore.Razor.Language.csproj" />
+  </ItemGroup>
+
+</Project>

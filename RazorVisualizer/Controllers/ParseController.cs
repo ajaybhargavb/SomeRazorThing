@@ -1,21 +1,26 @@
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 
 namespace RazorVisualizer
 {
     public class ApiController : Controller
     {
-        [HttpPost]
-        [Route("/[controller]/[action]")]
-        public IActionResult Parse(string source)
+        [HttpPost("/[controller]/[action]")]
+        public IActionResult Parse([FromBody] Source source)
         {
-            source = source ?? string.Empty;
-            var document = RazorSourceDocument.Create(source, fileName: null);
+            var document = RazorSourceDocument.Create(source.Content, fileName: null);
             var parser = new RazorParser();
             var tree = parser.Parse(document);
-            var result = Json(tree);
-            return result;
+            var result = TreeSerializer.Serialize(tree);
+            return Content(result);
+        }
+
+        public class Source
+        {
+            public string Content { get; set; }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace RazorVisualizer
         public static string Serialize(RazorSyntaxTree syntaxTree)
         {
             var rootNode = new Node();
-            Visit(syntaxTree.Root, rootNode);
+            Visit(syntaxTree.LegacyRoot, rootNode);
             var result = JsonConvert.SerializeObject(rootNode);
 
             return result;

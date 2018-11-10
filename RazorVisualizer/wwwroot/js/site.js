@@ -13,6 +13,8 @@
         // Set initial content.
         $('textarea#source').val(defaultContent);
         getParseTree(defaultContent);
+        getParseIRTree(defaultContent);
+        getNewParseTree(defaultContent);
 
         cm = CodeMirror.fromTextArea($('textarea#source')[0], {
             lineNumbers: true,
@@ -22,6 +24,8 @@
         });
         cm.on("change", function (cm, obj) {
             getParseTree(cm.getValue());
+            getParseIRTree(cm.getValue());
+            getNewParseTree(cm.getValue());
         });
     });
 
@@ -51,6 +55,44 @@
                 var result = $('<ul />');
                 transform(html, result, 0);
                 $("#results").html(result);
+            },
+            error: function(jqXhr, textStatus, errorThrown){
+                console.log("error: " + errorThrown);
+            }
+        });
+    }
+
+    function getParseIRTree(input) {
+        $.ajax({
+            url: 'api/ParseIR',
+            dataType: 'json',
+            type: 'post',
+            cache: false,
+            contentType: 'application/json',
+            data: JSON.stringify({ "content": input }),
+            success: function (html) {
+                var result = $('<ul />');
+                //transform(html, result, 0);
+                $("#irtree").html(html);
+            },
+            error: function(jqXhr, textStatus, errorThrown){
+                console.log("error: " + errorThrown);
+            }
+        });
+    }
+
+    function getNewParseTree(input) {
+        $.ajax({
+            url: 'api/NewParse',
+            dataType: 'json',
+            type: 'post',
+            cache: false,
+            contentType: 'application/json',
+            data: JSON.stringify({ "content": input }),
+            success: function (html) {
+                var result = $('<ul />');
+                transform(html, result, 0);
+                $("#newtree").html(result);
             },
             error: function(jqXhr, textStatus, errorThrown){
                 console.log("error: " + errorThrown);

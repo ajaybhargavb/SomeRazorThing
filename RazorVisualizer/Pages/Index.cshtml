@@ -5,17 +5,41 @@
 }
 
 <br />
-<div class="container">
-    <div class="row">
-        <div class="left-container col-md-6">
+    <!-- <div class="row">
+        <div class="left-container">
             <div class="source-container row">
                 <textarea id="source"></textarea>
             </div>
-            <div class="highlight-container row">
-                
+        </div>
+    </div> -->
+    <div class="row">
+        <div class="left-container col-md-6">
+            <div class="source-container row">
+                <div>
+                    <textarea id="source"></textarea>
+                </div>
             </div>
         </div>
-        <div class="mid-container col-md-0"></div>
+        <div class="right-container col-md-6">
+            <div class="ir-container row">
+                <div>
+                    <pre id="irtree">
+                        IR output
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="left-container col-md-6">
+            <div class="tree-container row">
+                <div>
+                    <pre id="newtree">
+                        New tree output
+                    </pre>
+                </div>
+            </div>
+        </div>
         <div class="right-container col-md-6">
             <div class="tree-container row">
                 <div>
@@ -27,4 +51,3 @@
         </div>
     </div>
     <br />
-</div>

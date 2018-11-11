@@ -1,0 +1,96 @@
+.header-row {
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    line-height: 0.9rem;
+    background-color: #e6e6e6;
+}
+
+.header {
+    color: #d7d7d7;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    margin-left: -2rem;
+    width: 9rem;
+    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+}
+
+.title {
+    text-align: center;
+    width: 100%;
+}
+
+.parser-options {
+    display: flex;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 95vh;
+}
+
+.content-box {
+    min-width: 40vw;
+    height: 42vh;
+    border: 1px solid #ccc;
+    flex: 1;
+    overflow: auto;
+    padding: 5px;
+}
+
+.content-box textarea {
+    width: 100%;
+    height: 100%;
+}
+
+.source-container {
+    padding: 0;
+}
+
+.CodeMirror {
+    height: 100%;
+}
+
+ul {
+    list-style: none;
+    padding-inline-start: 20px;
+}
+
+li {
+    display: inline-block;
+    width: max-content;
+}
+
+li > span {
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 25px;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline;
+}
+
+li>span:hover {
+    background-color: #e9e3e3;
+}
+
+a, a:hover {
+    text-decoration: none;
+}
+
+.parent > a {
+    color: #b43131;
+}
+
+.leaf > a {
+    color: #000000;
+}
+
+.highlight {
+    background-color: rgb(255, 238, 0);
+}

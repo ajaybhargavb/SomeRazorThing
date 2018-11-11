@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width">
     <title>Razorlab</title>
     <base href="/" />
-    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <!-- <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/codemirror.min.css" />
     <link href="css/site.css" rel="stylesheet" />
+    <link href="css/razorlab.css" rel="stylesheet" />
 </head>
 <body>
     <app>Loading...</app>
@@ -15,5 +18,14 @@
     <script>
         document.getElementById("blazorMode").src = window.location.search.includes("mode=client") ? "_framework/blazor.webassembly.js" : "_framework/blazor.server.js";
     </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.0.0/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.39.0/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="js/razorlab.js"></script>
 </body>
+
 </html>

@@ -1,8 +1,77 @@
 ﻿@page "/"
+@using Razorlab.Client.JsInterop
+@using Razorlab.Client.Pages
+@using Razorlab.Shared
+@inject HttpClient Http
+
+<div class="header-row">
+    <div class="header px-4">
+        <span class="title">Razorlab</span>
+    </div>
+    <ParserOptions bind-DesignTime=@_designTime bind-TagHelperPhase=@_tagHelperPhase></ParserOptions>
+</div>
+
+<div class="content px-4">
+    <div class="source-container content-box mx-2 my-2">
+        <textarea id="source" value=@InitialContent></textarea>
+    </div>
+    <Tree bind-Root=@_legacySyntaxTreeRoot />
+    <Tree bind-Root=@_syntaxTreeRoot />
+</div>
 
 
-<h1>Hello, world!</h1>
+@functions {
 
-Welcome to your new app.
+    private const string InitialContent = @"@{
+    var foo = ""Hello World!"";
+}
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<div>@foo</div>";
+    private Node _syntaxTreeRoot;
+    private Node _legacySyntaxTreeRoot;
+    private bool _designTime;
+    private bool _tagHelperPhase;
+    private string _source;
+    private bool _rendered;
+
+    protected override async Task OnAfterRenderAsync()
+    {
+        if (!_rendered)
+        {
+            await RazorlabJs.InitializeCodeMirror("#source", this);
+            SourceChanged();
+            _rendered = true;
+        }
+    }
+
+    private Input GetInput()
+    {
+        Console.WriteLine("DesignTime:" + _designTime + " TagHelperPhase: " + _tagHelperPhase);
+        return new Input
+        {
+            Content = _source,
+            DesignTime = _designTime,
+            TagHelperPhase = _tagHelperPhase,
+        };
+    }
+
+
+    [JSInvokable]
+    public async void SourceChanged()
+    {
+        Console.WriteLine("called");
+        var currentValue = await RazorlabJs.GetElementValue("#source");
+        if (currentValue == _source)
+        {
+            // Nothing changed
+            return;
+        }
+
+        _source = currentValue;
+
+        var input = GetInput();
+        _syntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetSyntaxTree", input);
+        _legacySyntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetLegacySyntaxTree", input);
+        StateHasChanged();
+    }
+}

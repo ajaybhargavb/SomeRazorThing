@@ -1,0 +1,34 @@
+@using Razorlab.Client.JsInterop
+@using Razorlab.Shared
+
+@if (Item != null)
+{
+    <ul>
+        <li>
+            <span class=@(@Item.Children.Count > 0 ? "parent" : "leaf") onmouseover="@MarkText" onmouseout="@ResetMark">
+                <a data-toggle="collapse" href="#@Item.Id">@Item.Content</a>
+            </span>
+            <div class="collapse show" id="@Item.Id">
+            @foreach (var child in Item.Children)
+            {
+                <NodeTemplate Item=@child />
+            }
+            </div>
+        </li>
+    </ul>
+}
+
+@functions {
+    [Parameter]
+    private Node Item { get; set; }
+
+    private async Task MarkText(UIMouseEventArgs e)
+    {
+        await RazorlabJs.MarkText("#source", Item.Start, Item.Length);
+    }
+
+    private async Task ResetMark(UIMouseEventArgs e)
+    {
+        await RazorlabJs.ResetMark("#source", Item.Start, Item.Length);
+    }
+}

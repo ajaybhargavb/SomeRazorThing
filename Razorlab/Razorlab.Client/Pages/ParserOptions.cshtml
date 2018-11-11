@@ -1,0 +1,27 @@
+<div class="parser-options px-4">
+    <span class="pr-4">Parser Options:</span>
+    <div class="pr-4">
+        <input type="checkbox" bind=@DesignTime />
+        <span>DesignTime</span>
+    </div>
+    <div class="pr-4">
+        <input type="checkbox" bind=@TagHelperPhase />
+        <span>TagHelper Phase</span>
+    </div>
+</div>
+
+@functions {
+
+    [Parameter]
+    private bool DesignTime { get; set; }
+
+    [Parameter]
+    private Action<bool> DesignTimeChanged { get; set; }
+
+    [Parameter]
+    private bool TagHelperPhase { get; set; }
+
+    [Parameter]
+    private Action<bool> TagHelperPhaseChanged { get; set; }
+
+}

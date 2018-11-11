@@ -1,0 +1,13 @@
+@using Razorlab.Shared
+
+<div class="content-box mx-2 my-2">
+    <NodeTemplate Item=@Root />
+</div>
+
+@functions {
+    [Parameter]
+    private Node Root { get; set; }
+
+    [Parameter]
+    private Action<Node> RootChanged { get; set; }
+}

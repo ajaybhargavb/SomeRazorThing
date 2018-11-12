@@ -8,25 +8,38 @@
     <div class="header px-4">
         <span class="title">Razorlab</span>
     </div>
-    <ParserOptions bind-DesignTime=@_designTime bind-TagHelperPhase=@_tagHelperPhase></ParserOptions>
+    <ParserOptions DesignTime=@_designTime TagHelperPhase=@_tagHelperPhase Trigger=@OptionsChanged></ParserOptions>
 </div>
 
 <div class="content px-4">
     <div class="source-container content-box mx-2 my-2">
         <textarea id="source" value=@InitialContent></textarea>
     </div>
-    <Tree bind-Root=@_legacySyntaxTreeRoot />
-    <Tree bind-Root=@_syntaxTreeRoot />
+    <div class="intermediate-container content-box mx-2 my-2">
+        <Tree bind-Root=@_intermediateRoot />
+    </div>
+    <div class="generated-code-container content-box mx-2 my-2">
+        <pre>@_generatedCode?.Code</pre>
+    </div>
+    <div class="content-box mx-2 my-2">
+        <Tree bind-Root=@_syntaxTreeRoot />
+    </div>
+    <div class="content-box mx-2 my-2">
+        <Tree bind-Root=@_legacySyntaxTreeRoot />
+    </div>
 </div>
 
 
 @functions {
 
-    private const string InitialContent = @"@{
+    private const string InitialContent = @"@addTagHelper *, TestAssembly
+@{
     var foo = ""Hello World!"";
 }
 
 <div>@foo</div>";
+    private GeneratedCodeResult _generatedCode;
+    private Node _intermediateRoot;
     private Node _syntaxTreeRoot;
     private Node _legacySyntaxTreeRoot;
     private bool _designTime;
@@ -39,14 +52,13 @@
         if (!_rendered)
         {
             await RazorlabJs.InitializeCodeMirror("#source", this);
-            SourceChanged();
+            await SourceChanged();
             _rendered = true;
         }
     }
 
     private Input GetInput()
     {
-        Console.WriteLine("DesignTime:" + _designTime + " TagHelperPhase: " + _tagHelperPhase);
         return new Input
         {
             Content = _source,
@@ -55,11 +67,26 @@
         };
     }
 
+    private async Task OptionsChanged(bool designTime, bool tagHelperPhase)
+    {
+        _designTime = designTime;
+        _tagHelperPhase = tagHelperPhase;
+        await Update();
+    }
+
+    private async Task Update()
+    {
+        var input = GetInput();
+        _syntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetSyntaxTree", input);
+        _legacySyntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetLegacySyntaxTree", input);
+        _generatedCode = await Http.PostJsonAsync<GeneratedCodeResult>("/api/Parse/GetGeneratedCode", input);
+        _intermediateRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetIRTree", input);
+        StateHasChanged();
+    }
 
     [JSInvokable]
-    public async void SourceChanged()
+    public async Task SourceChanged()
     {
-        Console.WriteLine("called");
         var currentValue = await RazorlabJs.GetElementValue("#source");
         if (currentValue == _source)
         {
@@ -69,9 +96,6 @@
 
         _source = currentValue;
 
-        var input = GetInput();
-        _syntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetSyntaxTree", input);
-        _legacySyntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetLegacySyntaxTree", input);
-        StateHasChanged();
+        await Update();
     }
 }

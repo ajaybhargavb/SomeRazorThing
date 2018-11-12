@@ -1,11 +1,11 @@
 <div class="parser-options px-4">
     <span class="pr-4">Parser Options:</span>
     <div class="pr-4">
-        <input type="checkbox" bind=@DesignTime />
+        <input type="checkbox" checked=@DesignTime onchange="@(e => { DesignTime = (bool)e.Value; TriggerChange(); })" />
         <span>DesignTime</span>
     </div>
     <div class="pr-4">
-        <input type="checkbox" bind=@TagHelperPhase />
+        <input type="checkbox" checked=@TagHelperPhase onchange="@(e => { TagHelperPhase = (bool)e.Value; TriggerChange(); })" />
         <span>TagHelper Phase</span>
     </div>
 </div>
@@ -16,12 +16,14 @@
     private bool DesignTime { get; set; }
 
     [Parameter]
-    private Action<bool> DesignTimeChanged { get; set; }
-
-    [Parameter]
     private bool TagHelperPhase { get; set; }
 
     [Parameter]
-    private Action<bool> TagHelperPhaseChanged { get; set; }
+    private Func<bool, bool, Task> Trigger { get; set; }
+
+    private void TriggerChange()
+    {
+        Trigger(DesignTime, TagHelperPhase);
+    }
 
 }

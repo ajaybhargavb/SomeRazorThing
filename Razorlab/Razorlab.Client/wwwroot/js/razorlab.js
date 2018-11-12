@@ -4,11 +4,15 @@ window.razorlabJs = {
         return cm.getValue();
     },
     initializeCodeMirror: function (element, onChangeTarget) {
+        if ($(element).next('.CodeMirror')[0]) {
+            // Already initialized.
+            return;
+        }
         var cm = CodeMirror.fromTextArea($(element)[0], {
             lineNumbers: true,
             mode: "htmlmixed",
             indentUnit: 4,
-            autofocus: true
+            autofocus: true,
         });
         cm.on("change", function (cm, obj) {
             onChangeTarget.invokeMethodAsync('SourceChanged');

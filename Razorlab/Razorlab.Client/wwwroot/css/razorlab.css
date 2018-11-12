@@ -56,6 +56,10 @@
     max-width: 32vw;
 }
 
+.source-container {
+    background-color: #282a36;
+}
+
 .CodeMirror {
     height: 100%;
 }
@@ -97,5 +101,6 @@ a, a:hover {
 }
 
 .highlight {
-    background-color: rgb(255, 238, 0);
+    background-color: yellow;
+    color: black !important;
 }

@@ -64,8 +64,28 @@ namespace Razorlab.Server
             builder.Append(" - ");
             builder.Append($"[{node.Position}..{node.EndPosition})::{node.FullWidth}");
 
-            builder.Append(" - ");
-            builder.Append($"[{node.ToFullString()}]");
+            if (node is RazorDirectiveSyntax razorDirective)
+            {
+                WriteRazorDirective(razorDirective, builder);
+            }
+            else if (node is MarkupTagHelperElementSyntax tagHelperElement)
+            {
+                WriteTagHelperElement(tagHelperElement, builder);
+            }
+            else if (node is MarkupTagHelperAttributeSyntax tagHelperAttribute)
+            {
+                WriteTagHelperAttributeInfo(tagHelperAttribute.TagHelperAttributeInfo, builder);
+            }
+            else if (node is MarkupMinimizedTagHelperAttributeSyntax minimizedTagHelperAttribute)
+            {
+                WriteTagHelperAttributeInfo(minimizedTagHelperAttribute.TagHelperAttributeInfo, builder);
+            }
+
+            if (ShouldDisplayNodeContent(node))
+            {
+                builder.Append(" - ");
+                builder.Append($"[{node.GetContent()}]");
+            }
 
             var annotation = node.GetAnnotations().FirstOrDefault(a => a.Kind == SyntaxConstants.SpanContextKind);
             if (annotation != null && annotation.Data is SpanContext context)
@@ -77,6 +97,61 @@ namespace Razorlab.Server
             }
 
             return builder.ToString();
+        }
+
+        private static void WriteRazorDirective(RazorDirectiveSyntax node, StringBuilder builder)
+        {
+            if (node.DirectiveDescriptor == null)
+            {
+                return;
+            }
+
+            builder.Append("Directive:{");
+            builder.Append(node.DirectiveDescriptor.Directive);
+            builder.Append(";");
+            builder.Append(node.DirectiveDescriptor.Kind);
+            builder.Append(";");
+            builder.Append(node.DirectiveDescriptor.Usage);
+            builder.Append("}");
+
+            var diagnostics = node.GetDiagnostics();
+            if (diagnostics.Length > 0)
+            {
+                builder.Append(" [");
+                var ids = string.Join(", ", diagnostics.Select(diagnostic => $"{diagnostic.Id}{diagnostic.Span}"));
+                builder.Append(ids);
+                builder.Append("]");
+            }
+
+            builder.Append(" - ");
+        }
+
+        private static void WriteTagHelperElement(MarkupTagHelperElementSyntax node, StringBuilder builder)
+        {
+            // Write tag name
+            builder.Append(" - ");
+            builder.Append($"{node.TagHelperInfo.TagName}[{node.TagHelperInfo.TagMode}]");
+
+            // Write descriptors
+            foreach (var descriptor in node.TagHelperInfo.BindingResult.Descriptors)
+            {
+                builder.Append(" - ");
+
+                // Get the type name without the namespace.
+                var typeName = descriptor.Name.Substring(descriptor.Name.LastIndexOf('.') + 1);
+                builder.Append(typeName);
+            }
+        }
+
+        private static void WriteTagHelperAttributeInfo(TagHelperAttributeInfo info, StringBuilder builder)
+        {
+            // Write attributes
+            builder.Append(" - ");
+            builder.Append(info.Name);
+            builder.Append(" - ");
+            builder.Append(info.AttributeStructure);
+            builder.Append(" - ");
+            builder.Append(info.Bound ? "Bound" : "Unbound");
         }
 
         private static string GetTokenContent(SyntaxToken token)
@@ -91,6 +166,23 @@ namespace Razorlab.Server
         {
             var result = content.Replace("\r\n", "\n");
             return result.Replace("\n", "LF");
+        }
+
+        private static bool ShouldDisplayNodeContent(SyntaxNode node)
+        {
+            return node.Kind == SyntaxKind.MarkupTextLiteral ||
+                node.Kind == SyntaxKind.MarkupEphemeralTextLiteral ||
+                node.Kind == SyntaxKind.MarkupTagBlock ||
+                node.Kind == SyntaxKind.MarkupAttributeBlock ||
+                node.Kind == SyntaxKind.MarkupMinimizedAttributeBlock ||
+                node.Kind == SyntaxKind.MarkupTagHelperAttribute ||
+                node.Kind == SyntaxKind.MarkupMinimizedTagHelperAttribute ||
+                node.Kind == SyntaxKind.MarkupLiteralAttributeValue ||
+                node.Kind == SyntaxKind.MarkupDynamicAttributeValue ||
+                node.Kind == SyntaxKind.CSharpStatementLiteral ||
+                node.Kind == SyntaxKind.CSharpExpressionLiteral ||
+                node.Kind == SyntaxKind.CSharpEphemeralTextLiteral ||
+                node.Kind == SyntaxKind.UnclassifiedTextLiteral;
         }
     }
 }

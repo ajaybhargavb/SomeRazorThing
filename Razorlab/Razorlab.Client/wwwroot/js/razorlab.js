@@ -13,6 +13,7 @@ window.razorlabJs = {
             mode: "htmlmixed",
             indentUnit: 4,
             autofocus: true,
+            theme: "dracula",
         });
         cm.on("change", function (cm, obj) {
             onChangeTarget.invokeMethodAsync('SourceChanged');

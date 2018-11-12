@@ -9,12 +9,16 @@ namespace Razorlab.Server
     {
         private static TagHelperDescriptor[] _tagHelpers = new[]
             {
-                TagHelperDescriptorBuilder.Create("TestTagHelper", "TestAssembly")
-                    .TypeName("TestTagHelper")
+                TagHelperDescriptorBuilder.Create("PTagHelper", "TestAssembly")
+                    .TypeName("PTagHelper")
                     .BoundAttributeDescriptor(attribute => attribute
                         .Name("Foo")
                         .TypeName("System.Int32")
                         .PropertyName("FooProp"))
+                    .BoundAttributeDescriptor(attribute => attribute
+                        .Name("Bar")
+                        .TypeName(typeof(string).FullName)
+                        .PropertyName("BarProp"))
                     .TagMatchingRuleDescriptor(rule => rule.RequireTagName("p"))
                     .Build()
             };

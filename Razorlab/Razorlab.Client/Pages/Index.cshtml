@@ -77,10 +77,11 @@
     private async Task Update()
     {
         var input = GetInput();
-        _syntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetSyntaxTree", input);
-        _legacySyntaxTreeRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetLegacySyntaxTree", input);
-        _generatedCode = await Http.PostJsonAsync<GeneratedCodeResult>("/api/Parse/GetGeneratedCode", input);
-        _intermediateRoot = await Http.PostJsonAsync<Node>("/api/Parse/GetIRTree", input);
+        var result = await Http.PostJsonAsync<ParseResult>("/api/Parse", input);
+        _syntaxTreeRoot = result.SyntaxTreeRoot;
+        _legacySyntaxTreeRoot = result.LegacySyntaxTreeRoot;
+        _intermediateRoot = result.IntermediateRoot;
+        _generatedCode = result.GeneratedCode;
         StateHasChanged();
     }
 

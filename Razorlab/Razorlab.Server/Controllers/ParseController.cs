@@ -14,8 +14,8 @@ namespace Razorlab.Server.Controllers
     [Route("api/[controller]")]
     public class ParseController : Controller
     {
-        [HttpPost("[action]")]
-        public Node GetSyntaxTree([FromBody] Input input)
+        [HttpPost]
+        public ParseResult Index([FromBody] Input input)
         {
             var document = CreateSourceDocument(input.Content);
             var options = RazorParserOptions.Create(builder => {
@@ -27,114 +27,53 @@ namespace Razorlab.Server.Controllers
                 builder.SetDesignTime(input.DesignTime);
             });
 
+            // Legacy Syntax Tree
+            var parser = new RazorParser(options);
+            var tree = parser.Parse(document, legacy: true);
+            var legacySyntaxTreeRoot = LegacyTreeSerializer.Serialize(tree);
+
+            // Syntax tree
             var context = new ParserContext(document, options);
             var codeParser = new CSharpCodeParser(GetDirectives(), context);
             var markupParser = new HtmlMarkupParser(context);
-
             codeParser.HtmlParser = markupParser;
             markupParser.CodeParser = codeParser;
-
             var root = markupParser.ParseDocument().CreateRed();
 
+            // IR tree
+            RazorCodeDocument codeDocument;
+            var engine = RazorProjectEngine.Create();
+            if (input.DesignTime)
+            {
+                codeDocument = engine.ProcessDesignTime(document, null, TestTagHelpers.GetDescriptors());
+            }
+            else
+            {
+                codeDocument = engine.Process(document, null, TestTagHelpers.GetDescriptors());
+            }
             if (input.TagHelperPhase)
             {
-                var engine = RazorProjectEngine.Create();
-                if (input.DesignTime)
-                {
-                    var codeDocument = engine.ProcessDesignTime(document, null, TestTagHelpers.GetDescriptors());
-                    root = codeDocument.GetSyntaxTree().Root;
-                }
-                else
-                {
-                    var codeDocument = engine.Process(document, null, TestTagHelpers.GetDescriptors());
-                    root = codeDocument.GetSyntaxTree().Root;
-                }
+                root = codeDocument.GetSyntaxTree().Root;
             }
 
-            var node = TreeSerializer.Serialize(root);
-            return node;
-        }
+            var syntaxTreeRoot = TreeSerializer.Serialize(root);
 
-        [HttpPost("[action]")]
-        public Node GetLegacySyntaxTree([FromBody] Input input)
-        {
-            var document = CreateSourceDocument(input.Content);
-            var options = RazorParserOptions.Create(builder => {
-                foreach (var directive in GetDirectives())
-                {
-                    builder.Directives.Add(directive);
-                }
-
-                builder.SetDesignTime(input.DesignTime);
-            });
-
-            var parser = new RazorParser(options);
-            var tree = parser.Parse(document, legacy: true);
-            var node = LegacyTreeSerializer.Serialize(tree);
-
-            return node;
-        }
-
-        [HttpPost("[action]")]
-        public Node GetIRTree([FromBody] Input input)
-        {
-            var document = CreateSourceDocument(input.Content);
-            var options = RazorParserOptions.Create(builder => {
-                foreach (var directive in GetDirectives())
-                {
-                    builder.Directives.Add(directive);
-                }
-
-                builder.SetDesignTime(input.DesignTime);
-            });
-
-            IntermediateNode intermediateNode;
-            var engine = RazorProjectEngine.Create();
-            if (input.DesignTime)
-            {
-                var codeDocument = engine.ProcessDesignTime(document, null, TestTagHelpers.GetDescriptors());
-                intermediateNode = codeDocument.GetDocumentIntermediateNode();
-            }
-            else
-            {
-                var codeDocument = engine.Process(document, null, TestTagHelpers.GetDescriptors());
-                intermediateNode = codeDocument.GetDocumentIntermediateNode();
-            }
-
-            var node = IRSerializer.Serialize(intermediateNode);
-            return node;
-        }
-
-        [HttpPost("[action]")]
-        public GeneratedCodeResult GetGeneratedCode([FromBody] Input input)
-        {
-            var document = CreateSourceDocument(input.Content);
-            var options = RazorParserOptions.Create(builder => {
-                foreach (var directive in GetDirectives())
-                {
-                    builder.Directives.Add(directive);
-                }
-
-                builder.SetDesignTime(input.DesignTime);
-            });
-
-            RazorCSharpDocument cSharpDocument;
-            var engine = RazorProjectEngine.Create();
-            if (input.DesignTime)
-            {
-                var codeDocument = engine.ProcessDesignTime(document, null, TestTagHelpers.GetDescriptors());
-                cSharpDocument = codeDocument.GetCSharpDocument();
-            }
-            else
-            {
-                var codeDocument = engine.Process(document, null, TestTagHelpers.GetDescriptors());
-                cSharpDocument = codeDocument.GetCSharpDocument();
-            }
-
-            var result = new GeneratedCodeResult {
+            var intermediateNode = codeDocument.GetDocumentIntermediateNode();
+            var intermediateRoot = IRSerializer.Serialize(intermediateNode);
+            
+            // Generated code
+            var cSharpDocument = codeDocument.GetCSharpDocument();
+            var generatedCode = new GeneratedCodeResult {
                 Code = cSharpDocument.GeneratedCode
             };
-            return result;
+
+            return new ParseResult
+            {
+                SyntaxTreeRoot = syntaxTreeRoot,
+                LegacySyntaxTreeRoot = legacySyntaxTreeRoot,
+                IntermediateRoot = intermediateRoot,
+                GeneratedCode = generatedCode
+            };
         }
 
         private static IEnumerable<DirectiveDescriptor> GetDirectives()

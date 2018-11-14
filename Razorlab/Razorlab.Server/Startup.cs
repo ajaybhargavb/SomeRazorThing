@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Blazor.Server;
-using Microsoft.AspNetCore.Blazor.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Blazor.Server;
+using Microsoft.AspNetCore.Blazor.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Razorlab.Server
 {

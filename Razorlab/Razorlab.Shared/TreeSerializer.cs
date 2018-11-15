@@ -4,9 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
 using Microsoft.AspNetCore.Razor.Language.Syntax;
-using Razorlab.Shared;
 
-namespace Razorlab.Server
+namespace Razorlab.Shared
 {
     public class TreeSerializer
     {

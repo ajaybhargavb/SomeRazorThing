@@ -1,5 +1,3 @@
-using Razorlab.Shared;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +7,11 @@ using Microsoft.AspNetCore.Razor.Language.Legacy;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 
-namespace Razorlab.Server.Controllers
+namespace Razorlab.Shared
 {
-    [Route("api/[controller]")]
-    public class ParseController : Controller
+    public class Parser
     {
-        [HttpPost]
-        public ParseResult Index([FromBody] Input input)
+        public static ParseResult Parse(Input input)
         {
             var document = CreateSourceDocument(input.Content);
             var options = RazorParserOptions.Create(builder => {

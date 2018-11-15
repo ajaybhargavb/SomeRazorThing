@@ -2,10 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <DefaultItemExcludes>$(DefaultItemExcludes);../../RazorVisualizer/Razor/**/*</DefaultItemExcludes>
     <LangVersion>7.3</LangVersion>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
     <UserSecretsId>0eefd82a-d34e-4bb9-8bb7-1c0be6bb5380</UserSecretsId>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>

@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using Razorlab.Client.JsInterop
 @using Razorlab.Client.Pages
 @using Razorlab.Shared
@@ -31,7 +31,6 @@
 
 
 @functions {
-
     private const string InitialContent = @"@addTagHelper *, TestAssembly
 @{
     var foo = ""Hello World!"";
@@ -67,18 +66,19 @@
         };
     }
 
-    private async Task OptionsChanged(bool designTime, bool tagHelperPhase)
+    private Task OptionsChanged(bool designTime, bool tagHelperPhase)
     {
         _designTime = designTime;
         _tagHelperPhase = tagHelperPhase;
-        await Update();
+        Update();
+
+        return Task.CompletedTask;
     }
 
-    private async Task Update()
+    private void Update()
     {
         var input = GetInput();
-        var result = await Http.PostJsonAsync<ParseResult>("/api/Parse", input);
-        _syntaxTreeRoot = result.SyntaxTreeRoot;
+        var result = Parser.Parse(input);_syntaxTreeRoot = result.SyntaxTreeRoot;
         _legacySyntaxTreeRoot = result.LegacySyntaxTreeRoot;
         _intermediateRoot = result.IntermediateRoot;
         _generatedCode = result.GeneratedCode;
@@ -97,6 +97,6 @@
 
         _source = currentValue;
 
-        await Update();
+        Update();
     }
 }

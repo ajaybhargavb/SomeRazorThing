@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Razor.Language;
 using Microsoft.AspNetCore.Razor.Language.Legacy;
-using Razorlab.Shared;
 
-namespace Razorlab.Server
+namespace Razorlab.Shared
 {
     public class LegacyTreeSerializer
     {

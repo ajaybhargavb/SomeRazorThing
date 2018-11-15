@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
-using Razorlab.Shared;
 
-namespace Razorlab.Server
+namespace Razorlab.Shared
 {
     public class IRSerializer
     {

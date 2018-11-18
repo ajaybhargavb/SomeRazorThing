@@ -6,7 +6,7 @@
     <UserSecretsId>0eefd82a-d34e-4bb9-8bb7-1c0be6bb5380</UserSecretsId>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(OS)' == 'Windows_NT'">win-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>

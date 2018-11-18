@@ -78,7 +78,8 @@
     private void Update()
     {
         var input = GetInput();
-        var result = Parser.Parse(input);_syntaxTreeRoot = result.SyntaxTreeRoot;
+        var result = Parser.Parse(input);
+        _syntaxTreeRoot = result.SyntaxTreeRoot;
         _legacySyntaxTreeRoot = result.LegacySyntaxTreeRoot;
         _intermediateRoot = result.IntermediateRoot;
         _generatedCode = result.GeneratedCode;

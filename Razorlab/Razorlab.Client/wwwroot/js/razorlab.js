@@ -15,7 +15,7 @@ window.razorlabJs = {
             autofocus: true,
             theme: "dracula",
         });
-        cm.on("change", function (cm, obj) {
+        cm.on("changes", function (cm, obj) {
             onChangeTarget.invokeMethodAsync('SourceChanged');
         });
     },

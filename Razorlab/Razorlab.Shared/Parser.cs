@@ -23,11 +23,6 @@ namespace Razorlab.Shared
                 builder.SetDesignTime(input.DesignTime);
             });
 
-            // Legacy Syntax Tree
-            var parser = new RazorParser(options);
-            var tree = parser.Parse(document, legacy: true);
-            var legacySyntaxTreeRoot = LegacyTreeSerializer.Serialize(tree);
-
             // Syntax tree
             var context = new ParserContext(document, options);
             var codeParser = new CSharpCodeParser(GetDirectives(), context);
@@ -38,14 +33,14 @@ namespace Razorlab.Shared
 
             // IR tree
             RazorCodeDocument codeDocument;
-            var engine = RazorProjectEngine.Create();
+            var engine = RazorProjectEngine.Create(configure: null);
             if (input.DesignTime)
             {
-                codeDocument = engine.ProcessDesignTime(document, null, TestTagHelpers.GetDescriptors());
+                codeDocument = engine.ProcessDesignTime(document, null, null, TestTagHelpers.GetDescriptors());
             }
             else
             {
-                codeDocument = engine.Process(document, null, TestTagHelpers.GetDescriptors());
+                codeDocument = engine.Process(document, null, null, TestTagHelpers.GetDescriptors());
             }
             if (input.TagHelperPhase)
             {
@@ -66,7 +61,6 @@ namespace Razorlab.Shared
             return new ParseResult
             {
                 SyntaxTreeRoot = syntaxTreeRoot,
-                LegacySyntaxTreeRoot = legacySyntaxTreeRoot,
                 IntermediateRoot = intermediateRoot,
                 GeneratedCode = generatedCode
             };

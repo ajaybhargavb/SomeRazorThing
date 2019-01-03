@@ -1,3 +1,6 @@
 [submodule "RazorVisualizer/Razor"]
 	path = RazorVisualizer/Razor
 	url = https://github.com/ajaybhargavb/Razor.git
+[submodule "submodules/AspNetCore-Tooling"]
+	path = submodules/AspNetCore-Tooling
+	url = https://github.com/ajaybhargavb/AspNetCore-Tooling.git

@@ -25,7 +25,7 @@
         <Tree bind-Root=@_syntaxTreeRoot />
     </div>
     <div class="content-box mx-2 my-2">
-        <Tree bind-Root=@_legacySyntaxTreeRoot />
+        
     </div>
 </div>
 
@@ -40,7 +40,6 @@
     private GeneratedCodeResult _generatedCode;
     private Node _intermediateRoot;
     private Node _syntaxTreeRoot;
-    private Node _legacySyntaxTreeRoot;
     private bool _designTime;
     private bool _tagHelperPhase;
     private string _source;
@@ -80,7 +79,6 @@
         var input = GetInput();
         var result = Parser.Parse(input);
         _syntaxTreeRoot = result.SyntaxTreeRoot;
-        _legacySyntaxTreeRoot = result.LegacySyntaxTreeRoot;
         _intermediateRoot = result.IntermediateRoot;
         _generatedCode = result.GeneratedCode;
         StateHasChanged();

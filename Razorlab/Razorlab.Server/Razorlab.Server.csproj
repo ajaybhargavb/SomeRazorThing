@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Razorlab.Client\Razorlab.Client.csproj" />
     <ProjectReference Include="..\Razorlab.Shared\Razorlab.Shared.csproj" />
-    <ProjectReference Include="../../RazorVisualizer/Razor/src/Microsoft.AspNetCore.Razor.Language/Microsoft.AspNetCore.Razor.Language.csproj" />
+    <ProjectReference Include="..\..\submodules\AspNetCore-Tooling\src\Razor\src\Microsoft.AspNetCore.Razor.Language\Microsoft.AspNetCore.Razor.Language.csproj" />
   </ItemGroup>
 
   <ItemGroup>

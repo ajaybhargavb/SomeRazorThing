@@ -7,7 +7,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
     <RuntimeIdentifier Condition="'$(OS)' == 'Windows_NT'">win-x64</RuntimeIdentifier>
-    <RuntimeIdentifier Condition="'$(OS)' != 'Windows_NT'">osx.10.13-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(OS)' != 'Windows_NT'">osx.10.14-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +22,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="0.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor.Server" Version="0.7.0" />
   </ItemGroup>
+
+  <!-- <Target Name="FixRidSpecificHost" AfterTargets="_ComputeNETCoreBuildOutputFiles">
+    <ItemGroup>
+      <None Remove="@(NativeAppHostNETCore)" />
+      <None Include="@(NativeAppHostNETCore)" Link="$(AssemblyName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never"/>
+    </ItemGroup>
+  </Target> -->
 
 </Project>

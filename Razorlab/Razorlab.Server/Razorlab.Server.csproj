@@ -7,6 +7,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\key.snk</AssemblyOriginatorKeyFile>
     <RuntimeIdentifier Condition="'$(OS)' == 'Windows_NT'">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(OS)' != 'Windows_NT'">osx.10.13-x64</RuntimeIdentifier>
   </PropertyGroup>
 
   <ItemGroup>
